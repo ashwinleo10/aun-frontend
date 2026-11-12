@@ -1,0 +1,416 @@
+.admin-customer-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.admin-customer-summary-card {
+  min-height: 100px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.admin-customer-summary-card span {
+  color: #777777;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+}
+
+.admin-customer-summary-card strong {
+  margin-top: 12px;
+  color: #111111;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* SUCCESS / ERROR */
+
+.admin-success-message,
+.admin-error-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-bottom: 18px;
+  padding: 0 14px;
+  border: 1px solid #dcdcdc;
+  font-size: 12px;
+}
+
+.admin-success-message {
+  background: #f7f7f7;
+  color: #222222;
+}
+
+.admin-error-message {
+  background: #fafafa;
+  color: #8a1f1f;
+  border-color: #e2caca;
+}
+
+/* TOOLBAR */
+
+.admin-customer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.admin-customer-search {
+  width: 100%;
+  max-width: 540px;
+}
+
+.admin-customer-search input {
+  width: 100%;
+  height: 44px;
+  padding: 0 15px;
+  border: 1px solid #dcdcdc;
+  outline: none;
+  background: #ffffff;
+  color: #111111;
+  font-family: inherit;
+  font-size: 12px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-customer-search input::placeholder {
+  color: #999999;
+}
+
+.admin-customer-search input:focus {
+  border-color: #111111;
+  box-shadow: 0 0 0 1px #111111;
+}
+
+/* TABLE */
+
+.admin-customer-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5e5e5;
+  background: #ffffff;
+}
+
+.admin-customer-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.admin-customer-table thead {
+  background: #f7f7f7;
+}
+
+.admin-customer-table th {
+  padding: 15px 16px;
+  border-bottom: 1px solid #dddddd;
+  color: #777777;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.admin-customer-table td {
+  padding: 16px;
+  border-bottom: 1px solid #eeeeee;
+  color: #444444;
+  font-size: 12px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.admin-customer-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-customer-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.admin-customer-table tbody tr:hover {
+  background: #fafafa;
+}
+
+/* CUSTOMER NAME */
+
+.admin-customer-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 170px;
+}
+
+.admin-customer-avatar-small {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dddddd;
+  border-radius: 50%;
+  background: #f5f5f5;
+  color: #111111;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-customer-name-cell div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.admin-customer-name-cell strong {
+  color: #111111;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-customer-name-cell span {
+  color: #999999;
+  font-size: 10px;
+}
+
+/* STATUS */
+
+.admin-customer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 78px;
+  padding: 6px 9px;
+  border: 1px solid #dddddd;
+  background: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.admin-customer-status.active {
+  color: #222222;
+}
+
+.admin-customer-status.inactive {
+  color: #777777;
+  background: #f7f7f7;
+}
+
+.admin-customer-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #111111;
+}
+
+.admin-customer-status.inactive
+  .admin-customer-status-dot {
+  background: #999999;
+}
+
+/* ACTIONS */
+
+.admin-customer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* VIEW BUTTON */
+
+.admin-view-customer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 78px;
+  height: 36px;
+  padding: 0 13px;
+  border: 1px solid #111111;
+  background: #111111;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.admin-view-customer-btn:hover {
+  background: #ffffff;
+  color: #111111;
+  border-color: #111111;
+}
+
+/* ACTIVATE / DEACTIVATE */
+
+.admin-customer-status-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  height: 36px;
+  padding: 0 13px;
+  border: 1px solid #cccccc;
+  background: #ffffff;
+  color: #333333;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.admin-customer-status-button:hover:not(:disabled) {
+  border-color: #111111;
+  background: #111111;
+  color: #ffffff;
+}
+
+.admin-customer-status-button.deactivate {
+  color: #555555;
+}
+
+.admin-customer-status-button.activate {
+  color: #111111;
+}
+
+.admin-customer-status-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* LOADING */
+
+.admin-customer-loading {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border: 1px solid #e5e5e5;
+  background: #ffffff;
+}
+
+.admin-customer-loading p {
+  margin: 0;
+  color: #888888;
+  font-size: 12px;
+}
+
+.admin-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #dddddd;
+  border-top-color: #111111;
+  border-radius: 50%;
+  animation: adminCustomerSpin 0.8s linear infinite;
+}
+
+@keyframes adminCustomerSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* EMPTY STATE */
+
+.admin-customer-empty {
+  min-height: 260px;
+  padding: 40px 20px;
+  border: 1px solid #e5e5e5;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.admin-customer-empty svg {
+  margin-bottom: 12px;
+  color: #999999;
+}
+
+.admin-customer-empty h3 {
+  margin: 0 0 7px;
+  color: #222222;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.admin-customer-empty p {
+  margin: 0;
+  color: #888888;
+  font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .admin-customer-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-customer-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-customer-toolbar {
+    align-items: stretch;
+  }
+
+  .admin-customer-search {
+    max-width: none;
+  }
+
+  .admin-customer-table-wrapper {
+    border-left: none;
+    border-right: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-customer-summary-card {
+    min-height: 90px;
+    padding: 16px;
+  }
+
+  .admin-customer-summary-card strong {
+    font-size: 23px;
+  }
+
+  .admin-customer-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-view-customer-btn,
+  .admin-customer-status-button {
+    width: 100%;
+  }
+}
