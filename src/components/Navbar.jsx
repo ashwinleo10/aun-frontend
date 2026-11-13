@@ -1,8 +1,15 @@
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
+
+  const username = sessionStorage.getItem("username");
+  const role = sessionStorage.getItem("role");
+
+  const isLoggedIn = !!username && !!role;
+
   return (
     <header className="home-navbar">
+
       {/* LOGO */}
       <Link to="/home" className="home-logo">
         aún<span>.</span>
@@ -10,6 +17,7 @@ export default function Navbar() {
 
       {/* NAVIGATION */}
       <nav className="nav-links">
+
         <Link to="/home" className="nav-active">
           Home
         </Link>
@@ -25,14 +33,19 @@ export default function Navbar() {
         <a href="/home#about">
           Our story
         </a>
+
       </nav>
 
       {/* ACTIONS */}
       <div className="nav-actions">
 
         {/* ACCOUNT */}
-        <Link to="/login" aria-label="Account">
+        <Link
+          to={isLoggedIn ? "/account" : "/login"}
+          aria-label="Account"
+        >
           <svg viewBox="0 0 24 24">
+
             <circle
               cx="12"
               cy="8"
@@ -42,29 +55,51 @@ export default function Navbar() {
             <path
               d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
             />
+
           </svg>
         </Link>
 
         {/* SHOPPING BAG */}
-        <Link to="/cart" aria-label="Shopping bag">
+        <Link
+          to="/cart"
+          aria-label="Shopping bag"
+        >
           <svg viewBox="0 0 24 24">
-            <path d="M5 8h14l1 13H4L5 8Z" />
+
+            <path
+              d="M5 8h14l1 13H4L5 8Z"
+            />
 
             <path
               d="M9 9V6a3 3 0 0 1 6 0v3"
             />
+
           </svg>
         </Link>
 
-        {/* SIGN IN */}
-        <Link
-          to="/login"
-          className="nav-signin"
-        >
-          Sign in
-        </Link>
+        {/* SIGN IN / ACCOUNT */}
+        {isLoggedIn ? (
+
+          <Link
+            to="/account"
+            className="nav-signin"
+          >
+            Account
+          </Link>
+
+        ) : (
+
+          <Link
+            to="/login"
+            className="nav-signin"
+          >
+            Sign in
+          </Link>
+
+        )}
 
       </div>
+
     </header>
   );
 }
