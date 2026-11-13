@@ -13,41 +13,6 @@ const typingQuotes = [
   "Made for every version of you.",
 ];
 
-const categoryImages = {
-  "T-Shirts":
-    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=85",
-
-  "Casual Shirts":
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1200&q=85",
-
-  Hoodies:
-    "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85",
-
-  Trousers:
-    "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85",
-
-  Sweatshirts:
-    "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1200&q=85",
-
-  Jeans:
-    "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=1200&q=85",
-
-  Accessories:
-    "https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=1200&q=85",
-
-  Jackets:
-    "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1200&q=85",
-
-  Bottoms:
-    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85",
-
-  Activewear:
-    "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=85",
-};
-
-const fallbackCategoryImage =
-  "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85";
-
 function formatPrice(price) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -70,18 +35,23 @@ function hasDiscount(product) {
   );
 }
 
+/*
+ * Convert category name into a safe URL slug.
+ *
+ * Examples:
+ *
+ * T-Shirts               -> t-shirts
+ * Casual Shirts          -> casual-shirts
+ * Hoodies                -> hoodies
+ * Hoodies / Sweatshirts -> hoodies-sweatshirts
+ * Activewear             -> activewear
+ */
 function createCategorySlug(categoryName) {
-  return categoryName
+  return String(categoryName || "")
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, "-");
-}
-
-function getCategoryImage(categoryName) {
-  return (
-    categoryImages[categoryName] ||
-    fallbackCategoryImage
-  );
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function ProductCard({ product }) {
@@ -550,11 +520,6 @@ export default function Home() {
               {categories.map(
                 (category, index) => {
 
-                  const categoryImage =
-                    getCategoryImage(
-                      category.categoryName
-                    );
-
                   return (
                     <Link
                       to={`/category/${createCategorySlug(
@@ -562,9 +527,6 @@ export default function Home() {
                       )}`}
                       className="category-card"
                       key={category.categoryId}
-                      style={{
-                        backgroundImage: `url("${categoryImage}")`,
-                      }}
                     >
 
                       <div className="category-info">
