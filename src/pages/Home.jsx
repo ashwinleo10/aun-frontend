@@ -13,6 +13,41 @@ const typingQuotes = [
   "Made for every version of you.",
 ];
 
+const categoryImages = {
+  "T-Shirts":
+    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=85",
+
+  "Casual Shirts":
+    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1200&q=85",
+
+  Hoodies:
+    "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85",
+
+  Trousers:
+    "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85",
+
+  Sweatshirts:
+    "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1200&q=85",
+
+  Jeans:
+    "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=1200&q=85",
+
+  Accessories:
+    "https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=1200&q=85",
+
+  Jackets:
+    "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1200&q=85",
+
+  Bottoms:
+    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85",
+
+  Activewear:
+    "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=85",
+};
+
+const fallbackCategoryImage =
+  "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85";
+
 function formatPrice(price) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -40,6 +75,13 @@ function createCategorySlug(categoryName) {
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "-");
+}
+
+function getCategoryImage(categoryName) {
+  return (
+    categoryImages[categoryName] ||
+    fallbackCategoryImage
+  );
 }
 
 function ProductCard({ product }) {
@@ -292,6 +334,7 @@ export default function Home() {
         <div className="announcement-track">
 
           {/* GROUP 1 */}
+
           <div className="announcement-group">
 
             <span>
@@ -321,6 +364,7 @@ export default function Home() {
           </div>
 
           {/* GROUP 2 - EXACT COPY */}
+
           <div className="announcement-group">
 
             <span>
@@ -504,47 +548,56 @@ export default function Home() {
             <div className="category-grid">
 
               {categories.map(
-                (category, index) => (
+                (category, index) => {
 
-                  <Link
-                    to={`/category/${createCategorySlug(
+                  const categoryImage =
+                    getCategoryImage(
                       category.categoryName
-                    )}`}
-                    className="category-card"
-                    key={category.categoryId}
-                  >
+                    );
 
-                    <div className="category-info">
+                  return (
+                    <Link
+                      to={`/category/${createCategorySlug(
+                        category.categoryName
+                      )}`}
+                      className="category-card"
+                      key={category.categoryId}
+                      style={{
+                        backgroundImage: `url("${categoryImage}")`,
+                      }}
+                    >
 
-                      <div>
+                      <div className="category-info">
 
-                        <span className="category-number">
-                          {String(index + 1).padStart(
-                            2,
-                            "0"
-                          )}
+                        <div>
+
+                          <span className="category-number">
+                            {String(index + 1).padStart(
+                              2,
+                              "0"
+                            )}
+                          </span>
+
+                          <h3>
+                            {category.categoryName}
+                          </h3>
+
+                          <p>
+                            {category.description ||
+                              "Explore the AÚN collection"}
+                          </p>
+
+                        </div>
+
+                        <span className="category-arrow">
+                          ↗
                         </span>
-
-                        <h3>
-                          {category.categoryName}
-                        </h3>
-
-                        <p>
-                          {category.description ||
-                            "Explore the AÚN collection"}
-                        </p>
 
                       </div>
 
-                      <span className="category-arrow">
-                        ↗
-                      </span>
-
-                    </div>
-
-                  </Link>
-
-                )
+                    </Link>
+                  );
+                }
               )}
 
             </div>

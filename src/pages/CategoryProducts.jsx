@@ -4,13 +4,6 @@ import { getAllProducts } from "../services/productService";
 import Navbar from "../components/Navbar";
 import "../assets/category-products.css";
 
-const categoryNames = {
-  "t-shirts": "T-Shirts",
-  shirts: "Shirts",
-  hoodies: "Hoodies",
-  trousers: "Trousers",
-};
-
 const priceRanges = [
   {
     label: "All prices",
@@ -57,6 +50,26 @@ const sortOptions = [
 const fallbackImage =
   "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=85";
 
+/*
+ * Convert category name into the same URL format
+ * used by Home.jsx.
+ *
+ * Examples:
+ * T-Shirts              → t-shirts
+ * Shirts                → shirts
+ * Hoodies               → hoodies
+ * Hoodies / Sweatshirts → hoodies-sweatshirts
+ * Casual Shirts         → casual-shirts
+ * Activewear            → activewear
+ */
+function createCategorySlug(categoryName) {
+  return String(categoryName || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function formatPrice(price) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -87,8 +100,21 @@ export default function CategoryProducts() {
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [selectedSort, setSelectedSort] = useState("newest");
 
-  const categoryTitle =
-    categoryNames[category] || "Collection";
+  /*
+   * FIND ACTUAL CATEGORY NAME
+   *
+   * Instead of hardcoding category names,
+   * find the category from the products returned
+   * by the backend.
+   */
+  const categoryTitle = useMemo(() => {
+    const matchingProduct = products.find(
+      (product) =>
+        createCategorySlug(product.categoryName) === category
+    );
+
+    return matchingProduct?.categoryName || "Collection";
+  }, [products, category]);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -121,18 +147,12 @@ export default function CategoryProducts() {
    */
   const categoryProducts = useMemo(() => {
     return products.filter((product) => {
-      const productCategory = String(
-        product.categoryName || ""
-      )
-        .trim()
-        .toLowerCase();
+      const productCategorySlug =
+        createCategorySlug(product.categoryName);
 
-      return (
-        productCategory ===
-        categoryTitle.toLowerCase()
-      );
+      return productCategorySlug === category;
     });
-  }, [products, categoryTitle]);
+  }, [products, category]);
 
   /*
    * SEARCH PRODUCTS
@@ -151,10 +171,7 @@ export default function CategoryProducts() {
 
       return productName.includes(query);
     });
-  }, [
-    categoryProducts,
-    searchQuery,
-  ]);
+  }, [categoryProducts, searchQuery]);
 
   /*
    * FILTER PRODUCTS BY PRICE
@@ -172,33 +189,28 @@ export default function CategoryProducts() {
         actualPrice <= selectedRange.max
       );
     });
-  }, [
-    searchedProducts,
-    selectedPrice,
-  ]);
+  }, [searchedProducts, selectedPrice]);
 
   /*
-   * SORT FILTERED PRODUCTS
+   * SORT PRODUCTS
    */
   const sortedProducts = useMemo(() => {
     const sorted = [...filteredProducts];
 
     if (selectedSort === "price-low") {
-      sorted.sort((a, b) => {
-        return (
+      sorted.sort(
+        (a, b) =>
           getProductPrice(a) -
           getProductPrice(b)
-        );
-      });
+      );
     }
 
     if (selectedSort === "price-high") {
-      sorted.sort((a, b) => {
-        return (
+      sorted.sort(
+        (a, b) =>
           getProductPrice(b) -
           getProductPrice(a)
-        );
-      });
+      );
     }
 
     if (selectedSort === "newest") {
@@ -216,13 +228,11 @@ export default function CategoryProducts() {
     }
 
     return sorted;
-  }, [
-    filteredProducts,
-    selectedSort,
-  ]);
+  }, [filteredProducts, selectedSort]);
 
   return (
     <main className="category-products-page">
+
       {/* ANNOUNCEMENT */}
 
       <div className="category-products-announcement">
@@ -238,7 +248,9 @@ export default function CategoryProducts() {
       {/* HEADER */}
 
       <section className="category-products-header">
+
         <div>
+
           <Link
             to="/home"
             className="category-back-link"
@@ -258,9 +270,11 @@ export default function CategoryProducts() {
             Discover pieces designed for every
             version of you.
           </p>
+
         </div>
 
         <div className="category-count">
+
           <span>
             {sortedProducts.length}
           </span>
@@ -270,23 +284,36 @@ export default function CategoryProducts() {
               ? "PRODUCT"
               : "PRODUCTS"}
           </p>
+
         </div>
+
       </section>
 
       {/* PRODUCTS CONTENT */}
 
       <section className="category-products-content">
+
         {/* PRICE FILTER */}
 
         <aside className="price-filter">
+
           <div className="filter-heading">
-            <span>FILTER</span>
-            <h2>Price</h2>
+
+            <span>
+              FILTER
+            </span>
+
+            <h2>
+              Price
+            </h2>
+
           </div>
 
           <div className="price-options">
+
             {priceRanges.map(
               (range, index) => (
+
                 <label
                   key={range.label}
                   className={`price-option ${
@@ -295,6 +322,7 @@ export default function CategoryProducts() {
                       : ""
                   }`}
                 >
+
                   <input
                     type="radio"
                     name="price"
@@ -311,22 +339,30 @@ export default function CategoryProducts() {
                   <span>
                     {range.label}
                   </span>
+
                 </label>
+
               )
             )}
+
           </div>
+
         </aside>
 
         {/* PRODUCTS */}
 
         <div className="category-product-area">
+
           {/* SEARCH + SORT BAR */}
 
           {!loading &&
             !error &&
             categoryProducts.length > 0 && (
+
               <div className="category-sort-bar">
+
                 <div className="category-results-count">
+
                   <span>
                     {sortedProducts.length}
                   </span>
@@ -336,9 +372,11 @@ export default function CategoryProducts() {
                       ? "ITEM"
                       : "ITEMS"}
                   </p>
+
                 </div>
 
                 <div className="category-search">
+
                   <input
                     type="text"
                     placeholder="Search products..."
@@ -349,9 +387,11 @@ export default function CategoryProducts() {
                       )
                     }
                   />
+
                 </div>
 
                 <div className="sort-control">
+
                   <label htmlFor="sort-products">
                     SORT BY
                   </label>
@@ -365,21 +405,26 @@ export default function CategoryProducts() {
                       )
                     }
                   >
+
                     {sortOptions.map(
                       (option) => (
+
                         <option
                           key={option.value}
-                          value={
-                            option.value
-                          }
+                          value={option.value}
                         >
                           {option.label}
                         </option>
+
                       )
                     )}
+
                   </select>
+
                 </div>
+
               </div>
+
             )}
 
           {/* LOADING */}
@@ -394,9 +439,11 @@ export default function CategoryProducts() {
 
           {!loading &&
             error && (
+
               <div className="category-products-message error">
                 {error}
               </div>
+
             )}
 
           {/* NO CATEGORY PRODUCTS */}
@@ -404,7 +451,9 @@ export default function CategoryProducts() {
           {!loading &&
             !error &&
             categoryProducts.length === 0 && (
+
               <div className="category-products-message">
+
                 <h2>
                   No{" "}
                   {categoryTitle.toLowerCase()}{" "}
@@ -413,10 +462,11 @@ export default function CategoryProducts() {
 
                 <p>
                   There are currently no
-                  products in this
-                  collection.
+                  products in this collection.
                 </p>
+
               </div>
+
             )}
 
           {/* NO SEARCH RESULTS */}
@@ -425,16 +475,19 @@ export default function CategoryProducts() {
             !error &&
             categoryProducts.length > 0 &&
             searchedProducts.length === 0 && (
+
               <div className="category-products-message">
+
                 <h2>
                   No products found.
                 </h2>
 
                 <p>
-                  No products match "
-                  {searchQuery}".
+                  No products match "{searchQuery}".
                 </p>
+
               </div>
+
             )}
 
           {/* NO PRODUCTS IN PRICE RANGE */}
@@ -443,17 +496,19 @@ export default function CategoryProducts() {
             !error &&
             searchedProducts.length > 0 &&
             sortedProducts.length === 0 && (
+
               <div className="category-products-message">
+
                 <h2>
-                  No products in this
-                  price range.
+                  No products in this price range.
                 </h2>
 
                 <p>
-                  Try selecting another
-                  price range.
+                  Try selecting another price range.
                 </p>
+
               </div>
+
             )}
 
           {/* PRODUCT GRID */}
@@ -461,106 +516,113 @@ export default function CategoryProducts() {
           {!loading &&
             !error &&
             sortedProducts.length > 0 && (
+
               <div className="category-product-grid">
-                {sortedProducts.map(
-                  (product) => {
-                    const image =
-                      product.imageUrls?.find(
-                        (url) =>
-                          url?.trim()
-                      ) ||
-                      fallbackImage;
 
-                    const hasDiscount =
-                      product.discountPrice !=
-                        null &&
-                      Number(
-                        product.discountPrice
-                      ) <
-                        Number(
-                          product.price
-                        );
+                {sortedProducts.map((product) => {
 
-                    const displayPrice =
-                      hasDiscount
-                        ? product.discountPrice
-                        : product.price;
+                  const image =
+                    product.imageUrls?.find(
+                      (url) => url?.trim()
+                    ) || fallbackImage;
 
-                    return (
-                      <article
-                        className="category-product-card"
-                        key={
-                          product.productId
-                        }
+                  const hasDiscount =
+                    product.discountPrice != null &&
+                    Number(product.discountPrice) <
+                      Number(product.price);
+
+                  const displayPrice =
+                    hasDiscount
+                      ? product.discountPrice
+                      : product.price;
+
+                  return (
+
+                    <article
+                      className="category-product-card"
+                      key={product.productId}
+                    >
+
+                      <Link
+                        to={`/products/${product.productId}`}
+                        className="category-product-image"
                       >
-                        <Link
-                          to={`/products/${product.productId}`}
-                          className="category-product-image"
-                        >
-                          <img
-                            src={image}
-                            alt={
-                              product.productName
-                            }
-                            onError={(
-                              event
-                            ) => {
-                              event.currentTarget.onerror =
-                                null;
 
-                              event.currentTarget.src =
-                                fallbackImage;
-                            }}
-                          />
+                        <img
+                          src={image}
+                          alt={product.productName}
+                          onError={(event) => {
 
-                          <span className="category-product-tag">
-                            {hasDiscount
-                              ? "SPECIAL PRICE"
-                              : "ESSENTIAL"}
-                          </span>
+                            event.currentTarget.onerror =
+                              null;
 
-                          <span className="category-product-view">
-                            VIEW PRODUCT ↗
-                          </span>
-                        </Link>
+                            event.currentTarget.src =
+                              fallbackImage;
 
-                        <div className="category-product-info">
-                          <div>
-                            <p>
-                              {product.categoryName}
-                            </p>
+                          }}
+                        />
 
-                            <h3>
-                              {
-                                product.productName
-                              }
-                            </h3>
-                          </div>
+                        <span className="category-product-tag">
+                          {hasDiscount
+                            ? "SPECIAL PRICE"
+                            : "ESSENTIAL"}
+                        </span>
 
-                          <div className="category-product-prices">
-                            {hasDiscount && (
-                              <span className="category-original-price">
-                                {formatPrice(
-                                  product.price
-                                )}
-                              </span>
-                            )}
+                        <span className="category-product-view">
+                          VIEW PRODUCT ↗
+                        </span>
 
-                            <span className="category-product-price">
+                      </Link>
+
+                      <div className="category-product-info">
+
+                        <div>
+
+                          <p>
+                            {product.categoryName}
+                          </p>
+
+                          <h3>
+                            {product.productName}
+                          </h3>
+
+                        </div>
+
+                        <div className="category-product-prices">
+
+                          {hasDiscount && (
+
+                            <span className="category-original-price">
                               {formatPrice(
-                                displayPrice
+                                product.price
                               )}
                             </span>
-                          </div>
+
+                          )}
+
+                          <span className="category-product-price">
+                            {formatPrice(
+                              displayPrice
+                            )}
+                          </span>
+
                         </div>
-                      </article>
-                    );
-                  }
-                )}
+
+                      </div>
+
+                    </article>
+
+                  );
+                })}
+
               </div>
+
             )}
+
         </div>
+
       </section>
+
     </main>
   );
 }
