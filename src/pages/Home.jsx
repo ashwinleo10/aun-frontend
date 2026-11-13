@@ -5,32 +5,6 @@ import { getAllCategories } from "../services/categoryService";
 import Navbar from "../components/Navbar";
 import "../assets/home.css";
 
-const categoryImages = {
-  "T-Shirts":
-    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85",
-
-  "Casual Shirts":
-    "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=85",
-
-  Hoodies:
-    "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=85",
-
-  Trousers:
-    "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=900&q=85",
-
-  Sweatshirts:
-    "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=900&q=85",
-
-  Jeans:
-    "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=85",
-
-  Accessories:
-    "https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=900&q=85",
-};
-
-const fallbackCategoryImage =
-  "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85";
-
 const typingQuotes = [
   "Still becoming. Still creating. Still you.",
   "Wear what feels like you.",
@@ -50,7 +24,7 @@ function formatPrice(price) {
 function getProductImage(product) {
   return (
     product.imageUrls?.find((url) => url?.trim()) ||
-    fallbackCategoryImage
+    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85"
   );
 }
 
@@ -68,10 +42,6 @@ function createCategorySlug(categoryName) {
     .replace(/\s+/g, "-");
 }
 
-function getCategoryImage(categoryName) {
-  return categoryImages[categoryName] || fallbackCategoryImage;
-}
-
 function ProductCard({ product }) {
   const discounted = hasDiscount(product);
   const image = getProductImage(product);
@@ -87,7 +57,9 @@ function ProductCard({ product }) {
           alt={product.productName}
           onError={(event) => {
             event.currentTarget.onerror = null;
-            event.currentTarget.src = fallbackCategoryImage;
+
+            event.currentTarget.src =
+              "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85";
           }}
         />
 
@@ -429,6 +401,7 @@ export default function Home() {
         </div>
 
         <div className="hero-bottom">
+
           <span>
             EST. 2026
           </span>
@@ -436,6 +409,7 @@ export default function Home() {
           <span>
             STYLE WITHOUT LIMITS
           </span>
+
         </div>
 
         <span className="hero-side-text">
@@ -540,40 +514,16 @@ export default function Home() {
                     key={category.categoryId}
                   >
 
-                    <div className="category-image-wrapper">
-
-                      <img
-                        src={getCategoryImage(
-                          category.categoryName
-                        )}
-                        alt={
-                          category.categoryName
-                        }
-                        onError={(event) => {
-                          event.currentTarget.onerror =
-                            null;
-
-                          event.currentTarget.src =
-                            fallbackCategoryImage;
-                        }}
-                      />
-
-                      <span className="category-number">
-                        {String(index + 1).padStart(
-                          2,
-                          "0"
-                        )}
-                      </span>
-
-                      <span className="category-arrow">
-                        ↗
-                      </span>
-
-                    </div>
-
                     <div className="category-info">
 
                       <div>
+
+                        <span className="category-number">
+                          {String(index + 1).padStart(
+                            2,
+                            "0"
+                          )}
+                        </span>
 
                         <h3>
                           {category.categoryName}
@@ -586,7 +536,7 @@ export default function Home() {
 
                       </div>
 
-                      <span>
+                      <span className="category-arrow">
                         ↗
                       </span>
 
