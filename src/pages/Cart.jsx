@@ -41,7 +41,18 @@ export default function Cart() {
       setError("");
 
       const data = await getCart();
+
       setCart(data);
+
+      /*
+       * If this is a new customer and the backend
+       * returned an empty cart, there are no products
+       * to fetch.
+       */
+      if (!data?.items || data.items.length === 0) {
+        setProductData({});
+        return;
+      }
 
       /*
        * Cart API gives us productId but does not include
@@ -67,12 +78,15 @@ export default function Cart() {
           }
 
           try {
-            const product = await getProductById(item.productId);
+            const product = await getProductById(
+              item.productId
+            );
 
             const image =
               product?.imageUrls?.find(
                 (url) =>
-                  typeof url === "string" && url.trim()
+                  typeof url === "string" &&
+                  url.trim()
               ) || fallbackImage;
 
             return [
@@ -113,15 +127,20 @@ export default function Cart() {
       }
 
       setError(
-        err.message || "Unable to load your shopping bag."
+        err.message ||
+          "Unable to load your shopping bag."
       );
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleQuantityChange(item, newQuantity) {
-    const product = productData[item.cartItemId];
+  async function handleQuantityChange(
+    item,
+    newQuantity
+  ) {
+    const product =
+      productData[item.cartItemId];
 
     /*
      * Prevent quantity from going below 1.
@@ -136,28 +155,39 @@ export default function Cart() {
      */
     if (
       product?.stockQuantity != null &&
-      newQuantity > product.stockQuantity
+      newQuantity >
+        product.stockQuantity
     ) {
       setError(
         `Only ${product.stockQuantity} item${
-          product.stockQuantity === 1 ? "" : "s"
-        } available for ${item.productName}.`
+          product.stockQuantity === 1
+            ? ""
+            : "s"
+        } available for ${
+          item.productName
+        }.`
       );
       return;
     }
 
     try {
-      setUpdatingItem(item.cartItemId);
+      setUpdatingItem(
+        item.cartItemId
+      );
       setError("");
 
-      const updatedCart = await updateCartItem(
-        item.cartItemId,
-        newQuantity
-      );
+      const updatedCart =
+        await updateCartItem(
+          item.cartItemId,
+          newQuantity
+        );
 
       setCart(updatedCart);
     } catch (err) {
-      console.error("Quantity update error:", err);
+      console.error(
+        "Quantity update error:",
+        err
+      );
 
       if (err.status === 401) {
         navigate("/login");
@@ -165,29 +195,42 @@ export default function Cart() {
       }
 
       setError(
-        err.message || "Unable to update quantity."
+        err.message ||
+          "Unable to update quantity."
       );
     } finally {
       setUpdatingItem(null);
     }
   }
 
-  async function handleRemoveItem(itemId) {
+  async function handleRemoveItem(
+    itemId
+  ) {
     try {
       setRemovingItem(itemId);
       setError("");
 
-      const updatedCart = await removeCartItem(itemId);
+      const updatedCart =
+        await removeCartItem(
+          itemId
+        );
 
       setCart(updatedCart);
 
       setProductData((current) => {
-        const updated = { ...current };
+        const updated = {
+          ...current,
+        };
+
         delete updated[itemId];
+
         return updated;
       });
     } catch (err) {
-      console.error("Remove item error:", err);
+      console.error(
+        "Remove item error:",
+        err
+      );
 
       if (err.status === 401) {
         navigate("/login");
@@ -195,7 +238,8 @@ export default function Cart() {
       }
 
       setError(
-        err.message || "Unable to remove this item."
+        err.message ||
+          "Unable to remove this item."
       );
     } finally {
       setRemovingItem(null);
@@ -215,12 +259,16 @@ export default function Cart() {
       setClearingCart(true);
       setError("");
 
-      const updatedCart = await clearCart();
+      const updatedCart =
+        await clearCart();
 
       setCart(updatedCart);
       setProductData({});
     } catch (err) {
-      console.error("Clear cart error:", err);
+      console.error(
+        "Clear cart error:",
+        err
+      );
 
       if (err.status === 401) {
         navigate("/login");
@@ -228,7 +276,8 @@ export default function Cart() {
       }
 
       setError(
-        err.message || "Unable to clear your bag."
+        err.message ||
+          "Unable to clear your bag."
       );
     } finally {
       setClearingCart(false);
@@ -246,7 +295,9 @@ export default function Cart() {
   if (error && !cart) {
     return (
       <div className="cart-status">
-        <h2>Unable to load your bag</h2>
+        <h2>
+          Unable to load your bag
+        </h2>
 
         <p>{error}</p>
 
@@ -264,13 +315,19 @@ export default function Cart() {
     );
   }
 
-  const items = cart?.items || [];
-  const isEmpty = items.length === 0;
+  const items =
+    cart?.items || [];
+
+  const isEmpty =
+    items.length === 0;
 
   return (
     <main className="cart-page">
       <header className="cart-header">
-        <Link to="/home" className="cart-logo">
+        <Link
+          to="/home"
+          className="cart-logo"
+        >
           aún<span>.</span>
         </Link>
 
@@ -289,11 +346,15 @@ export default function Cart() {
               YOUR SELECTION
             </span>
 
-            <h1>Your shopping bag</h1>
+            <h1>
+              Your shopping bag
+            </h1>
 
             <p>
-              {cart?.totalItems || 0}{" "}
-              {(cart?.totalItems || 0) === 1
+              {cart?.totalItems ||
+                0}{" "}
+              {(cart?.totalItems ||
+                0) === 1
                 ? "item"
                 : "items"}{" "}
               in your bag
@@ -304,8 +365,12 @@ export default function Cart() {
             <button
               type="button"
               className="clear-cart-button"
-              onClick={handleClearCart}
-              disabled={clearingCart}
+              onClick={
+                handleClearCart
+              }
+              disabled={
+                clearingCart
+              }
             >
               {clearingCart
                 ? "CLEARING..."
@@ -335,12 +400,16 @@ export default function Cart() {
               </svg>
             </div>
 
-            <h2>Your bag is waiting.</h2>
+            <h2>
+              Your bag is waiting.
+            </h2>
 
             <p>
-              Looks like you haven't added anything
-              to your bag yet. Discover something
-              that feels like you.
+              Looks like you haven't
+              added anything to your
+              bag yet. Discover
+              something that feels
+              like you.
             </p>
 
             <Link
@@ -354,22 +423,35 @@ export default function Cart() {
           <div className="cart-layout">
             <div className="cart-items-section">
               <div className="cart-items-heading">
-                <span>PRODUCT</span>
-                <span>SUBTOTAL</span>
+                <span>
+                  PRODUCT
+                </span>
+
+                <span>
+                  SUBTOTAL
+                </span>
               </div>
 
               {items.map((item) => {
                 const hasDiscount =
-                  item.discountPrice != null &&
-                  Number(item.discountPrice) <
-                    Number(item.price);
+                  item.discountPrice !=
+                    null &&
+                  Number(
+                    item.discountPrice
+                  ) <
+                    Number(
+                      item.price
+                    );
 
-                const unitPrice = hasDiscount
-                  ? item.discountPrice
-                  : item.price;
+                const unitPrice =
+                  hasDiscount
+                    ? item.discountPrice
+                    : item.price;
 
                 const product =
-                  productData[item.cartItemId];
+                  productData[
+                    item.cartItemId
+                  ];
 
                 const productImage =
                   product?.image ||
@@ -383,22 +465,32 @@ export default function Cart() {
                   item.cartItemId;
 
                 const isAtStockLimit =
-                  stockQuantity != null &&
+                  stockQuantity !=
+                    null &&
                   item.quantity >=
                     stockQuantity;
 
                 return (
                   <article
                     className="cart-item"
-                    key={item.cartItemId}
+                    key={
+                      item.cartItemId
+                    }
                   >
                     <div className="cart-item-image">
                       <img
-                        src={productImage}
-                        alt={item.productName}
-                        onError={(event) => {
+                        src={
+                          productImage
+                        }
+                        alt={
+                          item.productName
+                        }
+                        onError={(
+                          event
+                        ) => {
                           event.currentTarget.onerror =
                             null;
+
                           event.currentTarget.src =
                             fallbackImage;
                         }}
@@ -412,11 +504,15 @@ export default function Cart() {
                       </span>
 
                       <h2>
-                        {item.productName}
+                        {
+                          item.productName
+                        }
                       </h2>
 
                       <p className="cart-item-price">
-                        {formatPrice(unitPrice)}
+                        {formatPrice(
+                          unitPrice
+                        )}
 
                         {hasDiscount && (
                           <span>
@@ -431,14 +527,18 @@ export default function Cart() {
                         {item.selectedSize && (
                           <span>
                             Size:{" "}
-                            {item.selectedSize}
+                            {
+                              item.selectedSize
+                            }
                           </span>
                         )}
 
                         {item.selectedColor && (
                           <span>
                             Colour:{" "}
-                            {item.selectedColor}
+                            {
+                              item.selectedColor
+                            }
                           </span>
                         )}
                       </div>
@@ -512,9 +612,12 @@ export default function Cart() {
                       {isAtStockLimit && (
                         <p
                           style={{
-                            marginTop: "8px",
-                            color: "#888",
-                            fontSize: "10px",
+                            marginTop:
+                              "8px",
+                            color:
+                              "#888",
+                            fontSize:
+                              "10px",
                           }}
                         >
                           Maximum available
@@ -538,17 +641,26 @@ export default function Cart() {
                 ORDER SUMMARY
               </span>
 
-              <h2>Order details</h2>
+              <h2>
+                Order details
+              </h2>
 
               <div className="summary-line">
-                <span>Items</span>
                 <span>
-                  {cart?.totalItems || 0}
+                  Items
+                </span>
+
+                <span>
+                  {cart?.totalItems ||
+                    0}
                 </span>
               </div>
 
               <div className="summary-line">
-                <span>Subtotal</span>
+                <span>
+                  Subtotal
+                </span>
+
                 <span>
                   {formatPrice(
                     cart?.totalAmount
@@ -559,7 +671,9 @@ export default function Cart() {
               <div className="summary-divider" />
 
               <div className="summary-total">
-                <span>Total</span>
+                <span>
+                  Total
+                </span>
 
                 <strong>
                   {formatPrice(
@@ -569,8 +683,10 @@ export default function Cart() {
               </div>
 
               <p className="summary-note">
-                Shipping charges and applicable
-                taxes will be calculated during
+                Shipping charges
+                and applicable
+                taxes will be
+                calculated during
                 checkout.
               </p>
 
@@ -578,7 +694,9 @@ export default function Cart() {
                 type="button"
                 className="checkout-button"
                 onClick={() =>
-                  navigate("/checkout")
+                  navigate(
+                    "/checkout"
+                  )
                 }
               >
                 PROCEED TO CHECKOUT ↗

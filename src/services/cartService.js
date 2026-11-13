@@ -57,29 +57,52 @@ export async function getCart() {
     credentials: "include",
   });
 
+  /*
+   * A new customer may not have a cart yet.
+   *
+   * Backend returns 404 "Cart not found" in that case.
+   * Treat that as an empty cart instead of an error.
+   *
+   * Once the customer adds a product, the backend
+   * creates the cart normally.
+   */
+  if (response.status === 404) {
+    return {
+      items: [],
+      totalItems: 0,
+      totalAmount: 0,
+    };
+  }
+
   return handleResponse(response);
 }
 
 // Update cart item quantity
 export async function updateCartItem(itemId, quantity) {
-  const response = await fetch(`${API_BASE_URL}/cart/items/${itemId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({ quantity }),
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/cart/items/${itemId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ quantity }),
+    }
+  );
 
   return handleResponse(response);
 }
 
 // Remove individual cart item
 export async function removeCartItem(itemId) {
-  const response = await fetch(`${API_BASE_URL}/cart/items/${itemId}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/cart/items/${itemId}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+    }
+  );
 
   return handleResponse(response);
 }
