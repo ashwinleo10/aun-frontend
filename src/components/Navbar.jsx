@@ -39,7 +39,7 @@ export default function Navbar() {
       {/* ACTIONS */}
       <div className="nav-actions">
 
-        {/* ACCOUNT */}
+        {/* ACCOUNT ICON */}
         <Link
           to={isLoggedIn ? "/account" : "/login"}
           aria-label="Account"
@@ -77,25 +77,14 @@ export default function Navbar() {
           </svg>
         </Link>
 
-        {/* SIGN IN / ACCOUNT */}
-        {isLoggedIn ? (
-
-          <Link
-            to="/account"
-            className="nav-signin"
-          >
-            Account
-          </Link>
-
-        ) : (
-
+        {/* SIGN IN - ONLY WHEN LOGGED OUT */}
+        {!isLoggedIn && (
           <Link
             to="/login"
             className="nav-signin"
           >
             Sign in
           </Link>
-
         )}
 
       </div>
