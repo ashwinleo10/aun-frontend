@@ -90,18 +90,6 @@
   opacity: 0.7;
 }
 
-/*
-   The track contains exactly two identical groups.
-
-   Moving -50% means:
-   Group 1 leaves the screen
-   Group 2 takes exactly the same position
-
-   Then the animation starts again at 0.
-   Because both groups are identical, the restart
-   is visually seamless.
-*/
-
 @keyframes aunMarquee {
   0% {
     transform: translate3d(0, 0, 0);
@@ -410,86 +398,124 @@
 
 /* =================================
    CATEGORY GRID
+   TEXT ONLY — NO IMAGES
 ================================= */
 
 .category-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+
+  column-gap: 42px;
+  row-gap: 65px;
+
+  margin-top: 20px;
 }
+
+/* =================================
+   CATEGORY CARD
+================================= */
 
 .category-card {
   min-width: 0;
+
+  display: block;
+
   color: inherit;
+  text-decoration: none;
+
+  transition:
+    transform 0.3s ease;
 }
+
+.category-card:hover {
+  transform: translateY(-4px);
+}
+
+/* =================================
+   HIDE CATEGORY IMAGE AREA
+================================= */
 
 .category-image-wrapper {
-  position: relative;
-  height: 380px;
-  overflow: hidden;
-  background: #e6e5e1;
-}
-
-.category-image-wrapper img {
-  transition:
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.category-card:hover img {
-  transform: scale(1.06);
+  display: none;
 }
 
 .category-number {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  color: white;
-  font-size: 10px;
-  letter-spacing: 1px;
+  display: none;
 }
 
 .category-arrow {
-  position: absolute;
-  right: 15px;
-  bottom: 15px;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #fff;
-  color: #111;
-  font-size: 17px;
-  transition: all 0.3s;
+  display: none;
 }
 
-.category-card:hover .category-arrow {
-  background: #111;
-  color: #fff;
-}
+/* =================================
+   CATEGORY INFORMATION
+================================= */
 
 .category-info {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
-  padding-top: 17px;
+
+  gap: 25px;
+
+  min-height: 105px;
+
+  padding-top: 24px;
+
+  border-top: 1px solid #deded9;
+}
+
+.category-info > div {
+  min-width: 0;
 }
 
 .category-info h3 {
+  margin: 0;
+
   font-family: "Playfair Display", serif;
-  font-size: 21px;
+
+  font-size: 28px;
   font-weight: 500;
+
+  line-height: 1.15;
+
+  color: #151515;
 }
 
 .category-info p {
-  margin-top: 5px;
+  max-width: 300px;
+
+  margin-top: 12px;
+
   color: #888;
+
   font-size: 11px;
+  line-height: 1.7;
 }
 
 .category-info > span {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
   font-size: 18px;
+
+  color: #151515;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
+
+.category-card:hover .category-info > span {
+  transform: translate(4px, -4px);
+}
+
 
 /* =================================
    PRODUCTS
@@ -773,13 +799,19 @@
     gap: 20px;
   }
 
+  /* CATEGORY + PRODUCT GRID */
+
   .category-grid,
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 30px 18px;
+    gap: 40px 25px;
   }
 
-  .category-image-wrapper,
+  /*
+     Category images are intentionally removed,
+     so there is no image height here.
+  */
+
   .product-image-wrapper {
     height: 420px;
   }
@@ -838,7 +870,9 @@
     font-size: 10px;
   }
 
-  /* HERO */
+  /* =================================
+     HERO
+  ================================= */
 
   .hero-section {
     height: 650px;
@@ -880,7 +914,9 @@
     letter-spacing: 1px;
   }
 
-  /* TYPING QUOTE */
+  /* =================================
+     TYPING QUOTE
+  ================================= */
 
   .typing-quote-section {
     min-height: 350px;
@@ -899,7 +935,9 @@
     letter-spacing: -1px;
   }
 
-  /* SECTIONS */
+  /* =================================
+     SECTIONS
+  ================================= */
 
   .category-section,
   .products-section {
@@ -920,30 +958,59 @@
     margin-top: 25px;
   }
 
-  /* CATEGORIES + PRODUCTS */
+  /* =================================
+     CATEGORY GRID
+     MOBILE TEXT ONLY
+  ================================= */
 
-  .category-grid,
+  .category-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .category-card {
+    padding: 28px 0;
+  }
+
+  .category-card:first-child {
+    padding-top: 0;
+  }
+
+  .category-info {
+    min-height: auto;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #deded9;
+  }
+
+  .category-info h3 {
+    font-size: 25px;
+  }
+
+  .category-info p {
+    max-width: 260px;
+
+    font-size: 10px;
+    line-height: 1.7;
+  }
+
+  .category-info > span {
+    font-size: 16px;
+  }
+
+  /* =================================
+     PRODUCTS
+  ================================= */
+
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 27px 12px;
   }
 
-  .category-image-wrapper,
   .product-image-wrapper {
     height: auto;
     aspect-ratio: 0.72;
-  }
-
-  .category-info h3 {
-    font-size: 17px;
-  }
-
-  .category-info p {
-    font-size: 9px;
-  }
-
-  .category-info > span {
-    font-size: 14px;
   }
 
   .product-details {
@@ -968,7 +1035,9 @@
     display: none;
   }
 
-  /* ABOUT */
+  /* =================================
+     ABOUT
+  ================================= */
 
   .about-section {
     grid-template-columns: 1fr;
@@ -987,7 +1056,9 @@
     font-size: 48px;
   }
 
-  /* FOOTER */
+  /* =================================
+     FOOTER
+  ================================= */
 
   .home-footer {
     padding: 55px 25px 22px;
@@ -1023,7 +1094,7 @@
   }
 
   .category-info h3 {
-    font-size: 15px;
+    font-size: 23px;
   }
 
   .section-heading h2 {
@@ -1038,11 +1109,6 @@
 /* =================================
    REDUCED MOTION
 ================================= */
-
-/*
-   Keep the AÚN announcement running.
-   Other animations can respect reduced-motion.
-*/
 
 @media (prefers-reduced-motion: reduce) {
   .aun-home *:not(.announcement-track),
